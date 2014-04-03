@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE configuration    
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"    
+    "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<typeAlias alias="TaskRelaDO" type="com.dianping.data.warehouse.halley.domain.TaskRelaDO" />
+		<typeAlias alias="TaskDO" type="com.dianping.data.warehouse.halley.domain.TaskDO" />
+	</typeAliases>
+	
+	<mappers>
+		<mapper resource="sqlmap/task-mapper.xml" />
+		<mapper resource="sqlmap/taskrela-mapper.xml" />
+	</mappers>
+</configuration>

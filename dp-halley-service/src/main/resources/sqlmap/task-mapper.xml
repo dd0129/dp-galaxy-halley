@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.data.warehouse.core.dao.TaskDAO">
+
+	<resultMap id="taskRela" type="taskRelaDO">
+		<result property="cycleGap" column="cycle_gap" />
+		<result property="remark" column="remark" />
+		<result property="taskId" column="task_id" />
+		<result property="taskPreId" column="task_pre_id" />
+		<result property="timeStamp" column="time_stamp" />
+	</resultMap>
+	
+	<resultMap id="task" type="TaskDO" >
+        <result property="addTime" column="add_time" />
+        <result property="addUser" column="add_user" />
+        <result property="cycle" column="cycle" />
+        <result property="databaseSrc" column="database_src" />
+        <result property="freq" column="freq" />
+        <result property="ifPre" column="if_pre" />
+        <result property="ifRecall" column="if_recall" />
+        <result property="ifVal" column="if_val" />
+        <result property="ifWait" column="if_wait" />
+        <result property="logFile" column="log_file" />
+        <result property="logHome" column="log_home" />
+        <result property="offset" column="offset" />
+        <result property="offsetType" column="offset_type" />
+        <result property="owner" column="owner" />
+        <result property="para1" column="para1" />
+        <result property="para2" column="para2" />
+        <result property="para3" column="para3" />
+        <result property="prioLvl" column="prio_lvl" />
+        <result property="recallCode" column="recall_code" />
+        <result property="recallInterval" column="recall_Interval" />
+        <result property="recallLimit" column="recall_Limit" />
+        <result property="remark" column="remark" />
+        <result property="successCode" column="success_code" />
+        <result property="tableName" column="table_name" />
+        <result property="taskGroupId" column="task_group_id" />
+        <result property="taskId" column="task_id" />
+        <result property="taskName" column="task_name" />
+        <result property="taskObj" column="task_obj" />
+        <result property="timeout" column="timeout" />
+        <result property="type" column="type" />
+        <result property="updateTime" column="update_time" />
+        <result property="updateUser" column="update_user" />
+        <result property="waitCode" column="wait_code" />
+	</resultMap>
+	
+	<select id="getTaskByID" resultMap="task" parameterType="Integer" >
+		select add_time,add_user,cycle,database_src,freq,if_pre,if_recall,if_val,if_wait,log_file,
+		log_home,offset,offset_type,owner,para1,para2,para3,prio_lvl,recall_code,recall_Interval,
+		recall_Limit,remark,success_code,table_name,task_group_id,task_id,task_name,task_obj,timeout,
+		type,update_time,update_user,wait_code from etl_task_cfg WHERE task_id=#{id}
+	</select>
+	
+	<select id="getTaskIDList" resultType="Integer">
+		SELECT task_id FROM etl_task_cfg
+	</select>
+	
+	<insert id="insertTask" parameterType="TaskDO">
+	INSERT INTO etl_task_cfg
+        (
+            task_id,task_name,table_name,
+            remark,database_src,task_obj,
+            para1,para2,para3,
+            recall_limit,recall_interval,log_home,
+            log_file,task_group_id,cycle,
+            prio_lvl,if_pre,if_recall,if_wait,
+            if_val,add_user,add_time,update_user,
+            update_time,type,offset,timeout,
+            offset_type,freq,owner,wait_code,
+            recall_code,success_code
+        )
+        VALUES
+            (
+            #{taskId},#{taskName},#{tableName},
+            #{remark},#{databaseSrc},#{taskObj},
+            #{para1},#{para2},#{para3},
+            #{recallLimit},#{recallInterval},#{logHome},
+            #{logFile},#{taskGroupId},#{cycle},
+            #{prioLvl},#{ifPre},#{ifRecall},#{ifWait},
+            #{ifVal},#{addUser},#{addTime},#{updateUser},
+            #{updateTime},#{type},#{offset},#{timeout},
+            #{offsetType},#{freq},#{owner},#{waitCode},
+            #{recallCode},#{successCode}
+            )
+	</insert>
+	
+	<update id="updateTask" parameterType="TaskDO">
+		UPDATE etl_task_cfg
+        set
+            task_name = #{taskName},
+            table_name = #{tableName},
+            remark = #{remark},
+            database_src = #{databaseSrc},
+            task_obj = #{taskObj},
+            para1 = #{para1},
+            para2 = #{para2},
+            para3 = #{para3},
+            recall_limit = #{recallLimit},
+            recall_interval = #{recallInterval},
+            log_home = #{logHome},
+            log_file = #{logFile},
+            task_group_id = #{taskGroupId},
+            cycle = #{cycle},
+            prio_lvl = #{prioLvl},
+            if_pre = #{ifPre},
+            if_recall = #{ifRecall},
+            if_wait = #{ifWait},
+            if_val = #{ifVal},
+            update_user = #{updateUser},
+            update_time = #{updateTime},
+            type = #{type},
+            offset = #{offset},
+            offset_type = #{offsetType},
+            timeout = #{timeout},
+            freq = #{freq},
+            owner = #{owner},
+            wait_code = #{waitCode},
+            recall_code = #{recallCode},
+            success_code = #{successCode}
+            where task_id = #{taskId}
+	</update>
+	
+	<update id="updateTaskStatus">
+		<![CDATA[
+		UPDATE etl_task_cfg
+        set
+        if_val=#{status}
+        where task_id = #{taskId}
+        ]]>
+	</update>
+	
+	<delete id="deleteTask" parameterType="Integer">
+		delete from etl_task_cfg where task_id=#{id}
+	</delete>
+
+</mapper>
