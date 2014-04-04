@@ -59,9 +59,5 @@
         </tx:attributes>
     </tx:advice>
 
-    <pigeon:reference id="callback" timeout="1000"  serialize="hessian" callType="sync"
-                      interface="com.dianping.data.warehouse.halley.external.HalleyCallback" />
-
-
 
 </beans>

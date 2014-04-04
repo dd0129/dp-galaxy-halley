@@ -43,10 +43,10 @@ public class Const {
         code,message
     }
 
-    public static enum CODES{
+    public static enum EXTERNAL_CODES {
         SUCCESS(300),FAIL(301),EXCEPTION(500);
         private Integer code;
-        private CODES(Integer code){
+        private EXTERNAL_CODES(Integer code){
             this.code = code;
         }
         public Integer getCode(){

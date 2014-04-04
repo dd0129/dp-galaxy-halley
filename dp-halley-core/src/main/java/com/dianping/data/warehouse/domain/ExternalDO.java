@@ -7,7 +7,6 @@ public class ExternalDO {
     private Integer autoId;
     private Integer taskId;
     private Integer callType;
-    private String serviceType;
     private String implClass;
     private String parameterMap;
     private String owner;
@@ -46,13 +45,6 @@ public class ExternalDO {
         this.callType = callType;
     }
 
-    public String getServiceType() {
-        return serviceType;
-    }
-
-    public void setServiceType(String serviceType) {
-        this.serviceType = serviceType;
-    }
 
     public String getImplClass() {
         return implClass;

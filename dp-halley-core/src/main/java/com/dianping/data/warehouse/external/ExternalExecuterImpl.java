@@ -36,10 +36,10 @@ public class ExternalExecuterImpl implements ExternalExecuter{
 
             String rtnStr = (String)method.invoke(clazz.newInstance(),paras);
             JSONObject rtnJson = JSONObject.fromObject(rtnStr);
-            String code = (String)rtnJson.get("code");
+            Integer code = (Integer)rtnJson.get("code");
             String message = (String)rtnJson.get("message");
             this.writeLogFile(inst, message);
-            return Integer.valueOf(code);
+            return code;
         }catch(Exception e){
             logger.error("external call error",e);
             //return Const.JOB_STATUS.JOB_SUCCESS.getValue();
@@ -51,8 +51,8 @@ public class ExternalExecuterImpl implements ExternalExecuter{
         String logFile = inst.getLogPath();
         String snapshotLog = inst.getLogPath() + ".snapshot";
         try{
-            FileUtils.writeStringToFile(new File(logFile),msg,"utf-8");
-            FileUtils.writeStringToFile(new File(snapshotLog),msg,"utf-8");
+            FileUtils.writeStringToFile(new File(logFile),msg+"\n\r","utf-8",true);
+            FileUtils.writeStringToFile(new File(snapshotLog),msg+"\n\r","utf-8",true);
         }catch(IOException e){
             logger.error("write external msg error",e);
         }

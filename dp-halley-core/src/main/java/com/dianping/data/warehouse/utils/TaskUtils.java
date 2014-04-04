@@ -31,11 +31,9 @@ public class TaskUtils {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
             return task_id + sdf.format(init_date);
         } else {
-            throw new IllegalArgumentException(type + " is illegal cycle type ");
+            throw new IllegalArgumentException("\""+type +"\" is illegal for the type of cycle ");
         }
     }
-
-
 
     public static String generateRelaInstanceID(Integer pre_id, Long fire_time, String gap){
         Calendar calendar = Calendar.getInstance();

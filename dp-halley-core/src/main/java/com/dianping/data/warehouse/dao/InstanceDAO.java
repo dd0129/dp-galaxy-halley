@@ -24,7 +24,9 @@ public interface InstanceDAO {
 
     public void updateInstnaceStatus(@Param("instanceId")String instanceId,@Param("status") Integer status,@Param("desc") String desc);
 
-    public void updateInstnaceRunning(@Param("instanceId")String instanceId,@Param("status") Integer status,@Param("desc") String desc);
+    public void updateInstEndStatus(@Param("instanceId")String instanceId,@Param("status") Integer status,@Param("desc") String desc,@Param("time") String time);
+
+    public void updateInstnaceRunning(@Param("instanceId")String instanceId,@Param("status") Integer status,@Param("desc") String desc,@Param("time") String time);
 
     public List<InstanceDO> getRelaInstanceList(@Param("instanceId") String instanceId);
 

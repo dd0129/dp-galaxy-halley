@@ -36,7 +36,6 @@ public class TaskServiceImplTest{
 
     @Test
     public void testUpdateTask(){
-
         List<TaskRelaDO> relaDOList = TaskTestUtils.createExpectedTaskRelaList();
         TaskDO task = TaskTestUtils.createExpectTaskDO(relaDOList);
         task.setUpdateUser("shanshan");
@@ -126,4 +125,12 @@ public class TaskServiceImplTest{
     	Integer expected = 10004;
     	assertEquals(expected, result);
     }
+
+    @Test
+    public void testInstanceCallback(){
+    	taskService.instanceCallback("1000120120601",300,"success");
+        Assert.assertTrue(true);
+    }
+
+
 }

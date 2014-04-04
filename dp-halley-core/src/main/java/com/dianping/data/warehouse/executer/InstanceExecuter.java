@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,20 +57,22 @@ public class InstanceExecuter {
 
     private Integer executeTask(InstanceDO inst){
         logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") job starts");
-        this.instDAO.updateInstnaceRunning(inst.getInstanceId(), Const.JOB_STATUS.JOB_RUNNING.getValue(), Const.JOB_STATUS.JOB_RUNNING.getDesc());
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currTime = formatter.format(new Date());
+        this.instDAO.updateInstnaceRunning(inst.getInstanceId(), Const.JOB_STATUS.JOB_RUNNING.getValue(), Const.JOB_STATUS.JOB_RUNNING.getDesc(),currTime);
         if(inst.getType()== CoreConst.TASK_TYPE_LOAD){
             return ProcessUtils.executeWormholeCommand(inst);
         }else if(inst.getType()== CoreConst.TASK_TYPE_CALCULATE){
             return ProcessUtils.executeCommand(inst);
         }else{
-            this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue(),
-                    Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc());
+            this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue(),
+                    Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc(),currTime);
             logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ") type "+inst.getType()+ "is illegal type");
             throw new IllegalArgumentException(inst.getInstanceId() + "(" + inst.getTaskName() + ") type "+inst.getType()+ "is illegal type");
         }
     }
 
-    private boolean containCode(Integer code,String codes){
+    public boolean containCode(Integer code,String codes){
         if(StringUtils.isBlank(codes)){
             throw new NullPointerException("codes is null");
         }
@@ -80,40 +84,44 @@ public class InstanceExecuter {
         return false;
     }
 
-    private void recoredInternalLog(InstanceDO inst, Integer rtn) {
+    public void recoredInternalLog(InstanceDO inst, Integer rtn) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currTime = formatter.format(new Date());
         try{
             if(this.containCode(rtn,inst.getSuccessCode())){
                 logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") is success");
-                this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_SUCCESS.getValue(),
-                        Const.JOB_STATUS.JOB_SUCCESS.getDesc());
+                this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_SUCCESS.getValue(),
+                        Const.JOB_STATUS.JOB_SUCCESS.getDesc(),currTime);
                 return;
             }
             if (inst.getIfWait() == CoreConst.TASK_IF_WAIT) {
                 if(this.containCode(rtn,inst.getWaitCode())){
                     logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") retcode "+rtn+" is wait");
-                    this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_SUCCESS.getValue(),
-                            Const.JOB_STATUS.JOB_SUCCESS.getDesc());
+                    this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_WAIT.getValue(),
+                            Const.JOB_STATUS.JOB_WAIT.getDesc(),currTime);
                     return;
                 }
             }
             logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") retcode "+rtn+" is fail");
-            this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_FAIL.getValue(),
-                    Const.JOB_STATUS.JOB_FAIL.getDesc());
+            this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_FAIL.getValue(),
+                    Const.JOB_STATUS.JOB_FAIL.getDesc(),currTime);
 
         }catch(Throwable e){
-            logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ")record log error",e);
-            this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue(),
-                    Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc());
+            logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ") record log error",e);
+            this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue(),
+                    Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc(),currTime);
         }
 
     }
-    private void recoredExternalLog(InstanceDO inst, Integer rtn) {
-        if(rtn != Const.CODES.FAIL.getCode()){
-            this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_SUCCESS.getValue(),
-                    Const.JOB_STATUS.JOB_SUCCESS.getDesc());
+    public void recoredExternalLog(InstanceDO inst, Integer rtn) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String currTime = formatter.format(new Date());
+        if(rtn == null || rtn != Const.EXTERNAL_CODES.FAIL.getCode().intValue()){
+            this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_SUCCESS.getValue(),
+                    Const.JOB_STATUS.JOB_SUCCESS.getDesc(),currTime);
         }else{
-            this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_FAIL.getValue(),
-                    Const.JOB_STATUS.JOB_FAIL.getDesc());
+            this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_FAIL.getValue(),
+                    Const.JOB_STATUS.JOB_FAIL.getDesc(),currTime);
         }
     }
 
@@ -143,7 +151,6 @@ public class InstanceExecuter {
                 }else{
                     this.recoredInternalLog(inst,rtn);
                 }
-
                 //
                 //this.sendEmail(ts);
             }

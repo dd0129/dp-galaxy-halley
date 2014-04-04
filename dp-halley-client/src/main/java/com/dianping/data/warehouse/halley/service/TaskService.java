@@ -22,7 +22,7 @@ public interface TaskService {
 
     public Integer generateTaskID(TaskDO task);
 
-    public void InstanceCallback(String instanceId,Integer extStatus,String message);
+    public void instanceCallback(String instanceId,Integer extStatus,String message);
 
 
 }

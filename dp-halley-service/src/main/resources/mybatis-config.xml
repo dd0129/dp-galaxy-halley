@@ -6,10 +6,13 @@
 	<typeAliases>
 		<typeAlias alias="TaskRelaDO" type="com.dianping.data.warehouse.halley.domain.TaskRelaDO" />
 		<typeAlias alias="TaskDO" type="com.dianping.data.warehouse.halley.domain.TaskDO" />
+        <typeAlias alias="instance" type="com.dianping.data.warehouse.halley.domain.InstanceDO" />
+        <typeAlias alias="instanceRela" type="com.dianping.data.warehouse.halley.domain.InstanceRelaDO" />
 	</typeAliases>
 	
 	<mappers>
 		<mapper resource="sqlmap/task-mapper.xml" />
 		<mapper resource="sqlmap/taskrela-mapper.xml" />
+		<mapper resource="sqlmap/instance-mapper.xml" />
 	</mappers>
 </configuration>

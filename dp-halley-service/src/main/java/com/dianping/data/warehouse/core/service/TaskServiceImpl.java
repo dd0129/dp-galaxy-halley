@@ -150,11 +150,14 @@ public class TaskServiceImpl implements TaskService{
     }
 
     @Override
-    public void InstanceCallback(String instanceId, Integer rtnCode,String message) {
-        if(rtnCode == Const.CODES.SUCCESS.getCode()){
-            instDAO.updateInstnaceStatus(instanceId,rtnCode,"test");
+    public void instanceCallback(String instanceId, Integer rtnCode,String message) {
+        if(rtnCode == Const.EXTERNAL_CODES.SUCCESS.getCode()){
+            instDAO.updateInstnaceStatus(instanceId,Const.JOB_STATUS.JOB_SUCCESS.getValue(),
+                    Const.JOB_STATUS.JOB_SUCCESS.getDesc());
+        }else{
+            instDAO.updateInstnaceStatus(instanceId,Const.JOB_STATUS.JOB_POST_ERROR.getValue(),
+                    Const.JOB_STATUS.JOB_POST_ERROR.getDesc());
         }
-
     }
 
 

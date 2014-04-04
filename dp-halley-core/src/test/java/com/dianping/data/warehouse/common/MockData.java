@@ -1,14 +1,18 @@
 package com.dianping.data.warehouse.common;
 
+import com.dianping.data.warehouse.domain.ExternalDO;
 import com.dianping.data.warehouse.domain.InstanceDO;
-import com.dianping.data.warehouse.domain.InstanceRelaDO;
-
-import java.util.List;
 
 /**
  * Created by adima on 14-3-29.
  */
 public class MockData {
+    public static ExternalDO getExtInstance(){
+        ExternalDO extDO = new ExternalDO();
+        extDO.setImplClass("com.dianping.data.warehouse.external.SuccessClientTestImpl");
+        extDO.setOwner("hongdi.tang");
+        return extDO;
+    }
     public static InstanceDO genInstance(){
         InstanceDO inst = new InstanceDO();
         inst.setInstanceId("100012014032900");
