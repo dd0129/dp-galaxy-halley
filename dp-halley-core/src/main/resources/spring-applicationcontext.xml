@@ -58,6 +58,7 @@
         </tx:attributes>
     </tx:advice>
 
+
     <bean id="init" class="com.dianping.data.warehouse.executer.InitExecuter" />
     <bean id="execute" class="com.dianping.data.warehouse.executer.InstanceExecuter" />
     <bean id="ready" class="com.dianping.data.warehouse.executer.ReadyExecuter" />
@@ -77,7 +78,7 @@
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="execute"/>
         <property name="targetMethod" value="execute"/>
-        <property name="concurrent" value="true" />
+        <property name="concurrent" value="false" />
     </bean>
     <bean id="readyService"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">

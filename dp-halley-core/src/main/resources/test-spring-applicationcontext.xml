@@ -19,10 +19,18 @@
            http://code.dianping.com/schema/pigeon
            http://code.dianping.com/schema/pigeon/pigeon-service-2.0.xsd">
 
-    <pigeon:annotation />
+    <!--<pigeon:annotation />-->
 	<context:annotation-config />
 	<context:component-scan base-package="com.dianping" />
 	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <bean id="threadPoolTaskExecutor"
+          class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="2"/>
+        <property name="keepAliveSeconds" value="200"/>
+        <property name="maxPoolSize" value="200"/>
+        <property name="queueCapacity" value="60"/>
+    </bean>
 
 
 	<bean id="dataSource"
@@ -58,6 +66,15 @@
             <!--<tx:method name="*"/>-->
         </tx:attributes>
     </tx:advice>
+
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="120" />
+        <property name="queueCapacity" value="25" />
+    </bean>
+    <bean id="taskExecutorExample" class="com.dianping.data.warehouse.test.TaskExecutorExample">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
 
 
 </beans>

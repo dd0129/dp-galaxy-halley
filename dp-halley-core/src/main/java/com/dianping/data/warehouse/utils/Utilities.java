@@ -34,7 +34,7 @@ public class Utilities {
         public StreamWriter(InputStream is, File file, File snapshotFile) throws IOException{
             this.is = is;
             output = new FileOutputStream(file, true);
-            snapOutput = new FileOutputStream(snapshotFile, true);
+            snapOutput = new FileOutputStream(snapshotFile, false);
         }
 
         @Override

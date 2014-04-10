@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by hongdi.tang on 14-3-15.
@@ -30,7 +33,7 @@ public class ResourceManager {
         }
     }
 
-    public static boolean allocate(String resourceName){
+    public static  boolean allocate(String resourceName){
         Resource res = RESOURCE_MAP.get(resourceName);
         synchronized (res){
             if(res == null){
@@ -40,25 +43,27 @@ public class ResourceManager {
             } else{
                 if(res.getRunningNum()<res.getCapability()){
                     res.addRunningNum();
-                    logger.info(resourceName.concat(" resouce equal " ).concat(String.valueOf(res.getRunningNum())));
+                    logger.info(resourceName.concat("allocate resource;equal " ).concat(String.valueOf(res.getRunningNum())));
                     return true;
                 }
                 logger.info(resourceName.concat(" resouce is full; limit :=" ).concat(String.valueOf(res.getCapability())));
                 return false;
             }
         }
+
     }
 
-    public static void release(String resourceName){
+    public synchronized static void release(String resourceName){
         Resource res = RESOURCE_MAP.get(resourceName);
         synchronized (res){
             if(res == null){
                 logger.info(resourceName.concat(" is not exists"));
             } else{
                 res.minusRunningNum();
-                logger.info(resourceName.concat(" resouce equal " ).concat(String.valueOf(res.getRunningNum())));
+                logger.info(resourceName.concat(" release resouce ;number:= " ).concat(String.valueOf(res.getRunningNum())));
             }
         }
+
     }
 
     public static Resource getResource(String resource){

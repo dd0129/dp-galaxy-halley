@@ -44,6 +44,7 @@ public class InstanceDO {
     private Integer jobCode;
     private Integer isExternalPost;
 
+
     public Integer getIsExternalPre() {
         return isExternalPre;
     }

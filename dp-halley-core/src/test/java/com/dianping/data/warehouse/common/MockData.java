@@ -19,7 +19,7 @@ public class MockData {
         inst.setTaskId(10001);
         inst.setTaskGroupId(1);
         inst.setTaskName("test");
-        inst.setTaskObj("sh /test.sh");
+        inst.setTaskObj("e:/data/test.bat");
         inst.setRunningPrio(100);
         inst.setPara1("-t xx");
         inst.setPara2("-t xx");

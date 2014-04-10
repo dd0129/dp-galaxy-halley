@@ -34,9 +34,15 @@ public class TaskDO {
     private Integer recallInterval;
     private Integer recallLimit   ;
     private String successCode    ;
+    private Integer isExternalPost;
 
+    public Integer getIsExternalPost() {
+        return isExternalPost;
+    }
 
-
+    public void setIsExternalPost(Integer isExternalPost) {
+        this.isExternalPost = isExternalPost;
+    }
 
     public Integer getTaskId() {
         return taskId;
