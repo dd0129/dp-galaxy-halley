@@ -41,15 +41,16 @@ public class InstanceExecuter {
             for (InstanceDO inst : list) {
                 if (inst == null) {
                     continue;
-                }else if(ResourceManager2.isDuplicateTask(inst)) {
-                    logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") exists duplicate task");
-                    continue;
-                } else {
-                    if (ResourceManager2.idDupliateInstance(inst)) {
-                        logger.info("Warning!!" + inst.getInstanceId() + "(" + inst.getTaskName() + " is already in Running Queue");
-                        continue;
-                    }
                 }
+//                else if(ResourceManager2.isDuplicateTask(inst)) {
+//                    logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") exists duplicate task");
+//                    continue;
+//                } else {
+//                    if (ResourceManager2.idDupliateInstance(inst)) {
+//                        logger.info("Warning!!" + inst.getInstanceId() + "(" + inst.getTaskName() + " is already in Running Queue");
+//                        continue;
+//                    }
+//                }
 
                 Task2 task = new Task2(instDAO,extDAO,inst);
                 Thread.sleep(100);

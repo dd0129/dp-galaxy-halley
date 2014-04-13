@@ -67,29 +67,26 @@ public class ResourceManager2 {
         }
     }
 
-    public static synchronized boolean isDuplicateTask(InstanceDO inst){
-        Resource resource = RESOURCE_QUEUE.get(inst.getDatabaseSrc());
-        if(resource == null ){
-            return true;
-        }
-        Map<String,InstanceDO> runningQueue = resource.getQueue();
-            for(InstanceDO value : runningQueue.values()){
-                if(value.getTaskId().intValue() == inst.getTaskId().intValue()){
-                    return true;
-                }
+    private static synchronized boolean isDuplicateTask(InstanceDO inst){
+        Map<String,InstanceDO> map = getAllInstance();
+        for(InstanceDO value : map.values()){
+            if(value.getTaskId().intValue() == inst.getTaskId().intValue()){
+                return true;
             }
-            return false;
+        }
+        return false;
     }
 
     public static synchronized boolean idDupliateInstance(InstanceDO inst){
-        Resource resource = RESOURCE_QUEUE.get(inst.getDatabaseSrc());
-        if(resource == null ){
-            return true;
-        }
-        return resource.getQueue().containsKey(inst.getInstanceId());
+        Map<String,InstanceDO> map = getAllInstance();
+        return map.containsKey(inst.getInstanceId());
     }
 
     public static synchronized int inQueue(InstanceDO inst){
+        if(isDuplicateTask(inst)){
+            logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") exists duplicate task");
+            return -1;
+        }
         Resource resource = RESOURCE_QUEUE.get(inst.getDatabaseSrc());
         if(resource == null){
             resource = new Resource(inst.getDatabaseSrc(), 1,new ConcurrentHashMap<String,InstanceDO>());
@@ -100,12 +97,13 @@ public class ResourceManager2 {
                 resource.queue.put(inst.getInstanceId(),inst);
                 return size(inst.getDatabaseSrc());
             }else{
+                logger.info(inst.getDatabaseSrc() + " is full capability :="+resource.getCapability());
                 return -1;
             }
         }
     }
 
-    public static int outQueue(InstanceDO inst){
+    public static synchronized int outQueue(InstanceDO inst){
         RESOURCE_QUEUE.get(inst.getDatabaseSrc()).queue.remove(inst.getInstanceId());
         return size(inst.getDatabaseSrc());
     }
@@ -139,6 +137,14 @@ public class ResourceManager2 {
     public static Set<Map.Entry<String, InstanceDO>> entrySet(String resource){
         Resource res = RESOURCE_QUEUE.get(resource);
         return res == null ? null : res.queue.entrySet();
+    }
+
+    private static Map<String, InstanceDO> getAllInstance(){
+        Map<String,InstanceDO> map = new ConcurrentHashMap<String, InstanceDO>();
+        for(Resource res : RESOURCE_QUEUE.values()){
+            map.putAll(res.getQueue());
+        }
+        return map;
     }
 
 }

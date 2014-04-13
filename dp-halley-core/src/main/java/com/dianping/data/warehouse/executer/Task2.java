@@ -46,6 +46,7 @@ public class Task2 implements Runnable{
             int size = ResourceManager2.inQueue(inst);
             flag = size!=-1;
             if(!flag){
+                logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") not join to queue");
                 return;
             }
             logger.info(inst.getDatabaseSrc() +" " +size);

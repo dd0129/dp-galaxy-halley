@@ -32,8 +32,20 @@
 		<property name="url" value="${JDBC.url}" />
 	</bean>
 
+    <bean id="dataSourcePool"
+          class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close" lazy-init="false">
+        <property name="driverClassName" value="${JDBC.driver}"/>
+        <property name="url" value="${JDBC.url}"/>
+        <property name="username" value="${JDBC.username}"/>
+        <property name="password" value="${JDBC.password}"/>
+        <property name="initialSize" value="5"/>
+        <property name="maxActive" value="20"/>
+        <property name="maxWait" value="60000"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSourcePool" />
         <property name="configLocation" value="classpath:mybatis-config.xml" />
     </bean>
 
@@ -42,7 +54,7 @@
 
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-		p:dataSource-ref="dataSource" />
+		p:dataSource-ref="dataSourcePool" />
 
     <!-- transaction -->
     <aop:config>
@@ -60,7 +72,7 @@
 
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="5" />
-        <property name="maxPoolSize" value="120" />
+        <property name="maxPoolSize" value="150" />
         <property name="queueCapacity" value="25" />
     </bean>
 

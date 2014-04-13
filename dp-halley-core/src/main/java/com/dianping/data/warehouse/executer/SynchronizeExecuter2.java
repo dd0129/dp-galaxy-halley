@@ -27,7 +27,9 @@ public class SynchronizeExecuter2 {
                 logger.info(inst.getInstanceId() + "(" + inst.getTaskName() +
                         ") in queue time " + inst.getInQueueTimeMillis());
                 try{
-                    if (System.currentTimeMillis() - inQueueTime > CoreConst.WAIT_INTERVAL) {
+                    if (System.currentTimeMillis() - inQueueTime > CoreConst.WAIT_INTERVAL &&
+                            inst.getStatus().intValue()!=Const.JOB_STATUS.JOB_TIMEOUT.getValue()) {
+                        inst.setStatus(Const.JOB_STATUS.JOB_TIMEOUT.getValue());
                         Integer status = instDAO.getInstanceInfo(inst.getInstanceId()).getStatus();
                         if (status != Const.JOB_STATUS.JOB_RUNNING.getValue() &&
                                 status != Const.JOB_STATUS.JOB_TIMEOUT.getValue()) {
