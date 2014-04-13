@@ -17,7 +17,7 @@ import java.util.List;
  * Created by adima on 14-3-23.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring-applicationcontext.xml")
+@ContextConfiguration("classpath:spring-applicationcontext-resource.xml")
 public class TaskDAOTest {
     private Logger logger = LoggerFactory.getLogger(TaskDAOTest.class);
     @Resource(name="taskDAO")

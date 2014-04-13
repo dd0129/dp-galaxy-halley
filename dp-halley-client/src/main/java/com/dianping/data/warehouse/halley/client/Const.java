@@ -54,4 +54,6 @@ public class Const {
         }
     }
 
+    public static final String HALLEY_CASCADE_TOPIC = "halley_cascade";
+
 }

@@ -6,7 +6,10 @@ import com.dianping.data.warehouse.dao.proxy.InstanceDAOProxy;
 import com.dianping.data.warehouse.domain.InstanceDO;
 import com.dianping.data.warehouse.domain.TaskDO;
 import com.dianping.data.warehouse.domain.TaskRelaDO;
+import com.dianping.data.warehouse.utils.DateUtils;
+import com.dianping.data.warehouse.utils.Utilities;
 import junit.framework.Assert;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -157,6 +160,11 @@ public class InitExecuterTest {
             d = expression.getNextValidTimeAfter(d);
             System.out.println(d);
         }
+    }
+
+    @Test
+    public void testPara() throws Exception{
+
     }
 
 

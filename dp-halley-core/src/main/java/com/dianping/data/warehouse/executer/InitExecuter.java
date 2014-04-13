@@ -155,21 +155,21 @@ public class InitExecuter {
         }else{
             status = Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue();
             desc = Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc();
-            logger.error(task.getTaskId()+"("+task.getTaskName()+")" + " init error");
+            logger.error(task.getTaskId()+"("+task.getTaskName()+")" + " init error;message:"+rtn[1]);
         }
 
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String currTime = formatter.format(new Date());
 
-        para1 = ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara1(), task.getOffsetType(), task.getOffset(), triggerTime))
+        para1 = StringUtils.isBlank(task.getPara1()) ? task.getPara1():ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara1(), task.getOffsetType(), task.getOffset(), triggerTime))
                 .replace("${task_id}", String.valueOf(task.getTaskId()))
                 .replace("${instance_id}", instanceId)
                 .replace("${unix_timestamp}", String.valueOf(triggerTime.getTime() / 1000));
-        para2 = ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara2(), task.getOffsetType(), task.getOffset(), triggerTime))
+        para2 = StringUtils.isBlank(task.getPara2())? task.getPara2() :ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara2(), task.getOffsetType(), task.getOffset(), triggerTime))
                 .replace("${task_id}", String.valueOf(task.getTaskId()))
                 .replace("${instance_id}", instanceId)
                 .replace("${unix_timestamp}", String.valueOf(triggerTime.getTime() / 1000));
-        para3 = ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara3(), task.getOffsetType(), task.getOffset(), triggerTime))
+        para3 = StringUtils.isBlank(task.getPara3())? task.getPara3() : ParameterUtils.resourceParamHandle(DateUtils.getReplaceCal(task.getPara3(), task.getOffsetType(), task.getOffset(), triggerTime))
                 .replace("${task_id}", String.valueOf(task.getTaskId()))
                 .replace("${instance_id}", instanceId)
                 .replace("${unix_timestamp}", String.valueOf(triggerTime.getTime() / 1000));
@@ -220,6 +220,7 @@ public class InitExecuter {
         inst.setRecallInterval(task.getRecallInterval());
         inst.setTimestamp(currTime);
         inst.setJobCode(CoreConst.DEFAULT_TASK_JOBCODE);
+        inst.setIsExternalPost(task.getIsExternalPost());
 
         List<InstanceRelaDO> instRelaList = new ArrayList<InstanceRelaDO>();
         if(relaList == null){

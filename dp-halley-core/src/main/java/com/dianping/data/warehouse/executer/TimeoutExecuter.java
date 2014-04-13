@@ -3,7 +3,7 @@ package com.dianping.data.warehouse.executer;
 import com.dianping.data.warehouse.dao.InstanceDAO;
 import com.dianping.data.warehouse.domain.InstanceDO;
 import com.dianping.data.warehouse.halley.client.Const;
-import com.dianping.data.warehouse.resource.RunningQueueManager;
+import com.dianping.data.warehouse.resource.ResourceManager2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class TimeoutExecuter {
     public void execute(){
         try{
             logger.info("the timeout execute process starts");
-            for (InstanceDO inst : RunningQueueManager.values()) {
+            for (InstanceDO inst : ResourceManager2.values()) {
                 try {
                     Long startTime = inst.getInQueueTimeMillis();
                     Long currentTime = System.currentTimeMillis();

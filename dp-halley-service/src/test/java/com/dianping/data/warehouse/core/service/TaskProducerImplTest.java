@@ -1,6 +1,6 @@
 package com.dianping.data.warehouse.core.service;
 
-import com.dianping.data.warehouse.halley.service.TaskProducer;
+import com.dianping.data.warehouse.halley.service.HalleyProducer;
 import org.junit.Test;
 
 /**
@@ -10,7 +10,7 @@ import org.junit.Test;
 public class TaskProducerImplTest {
     @Test
     public void testPublish() throws Exception {
-        TaskProducer producer = new TaskProducerImpl();
+        HalleyProducer producer = new TaskProducerImpl();
         producer.publish("fuck");
     }
 

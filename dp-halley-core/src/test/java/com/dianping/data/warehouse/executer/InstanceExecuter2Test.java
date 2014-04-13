@@ -13,8 +13,8 @@ import javax.annotation.Resource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-spring-applicationcontext.xml")
 public class InstanceExecuter2Test {
-    @Resource(name="instanceExecuter2")
-    private InstanceExecuter2 service;
+    @Resource(name="execute")
+    private InstanceExecuter service;
     @Test
     public void testExecute() throws Exception {
        // while(true){

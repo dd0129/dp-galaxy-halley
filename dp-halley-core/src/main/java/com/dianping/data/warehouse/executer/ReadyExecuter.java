@@ -22,18 +22,24 @@ public class ReadyExecuter {
     private InstanceDAO instDAO;
 
     public void execute(){
-        List<InstanceDO> list = instDAO.getInitInstanceList(Const.JOB_STATUS.JOB_INIT.getValue(),System.currentTimeMillis());
-        for(InstanceDO inst : list){
-            try{
-                boolean flag = this.updateTask(inst);
-                if(flag){
-                    logger.info(inst.getInstanceId()+ "("+inst.getTaskName() + ") is ready");
-                    this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_READY.getValue(), Const.JOB_STATUS.JOB_READY.getDesc());
+        try{
+            logger.info("the ready thread starts");
+            List<InstanceDO> list = instDAO.getInitInstanceList(Const.JOB_STATUS.JOB_INIT.getValue(),System.currentTimeMillis());
+            for(InstanceDO inst : list){
+                try{
+                    boolean flag = this.updateTask(inst);
+                    if(flag){
+                        logger.info(inst.getInstanceId()+ "("+inst.getTaskName() + ") is ready");
+                        this.instDAO.updateInstnaceStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_READY.getValue(), Const.JOB_STATUS.JOB_READY.getDesc());
+                    }
+                }catch(Exception e){
+                    logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ") update ready error",e);
                 }
-            }catch(Exception e){
-                logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ") update ready error",e);
             }
+        }finally{
+            logger.info("the ready thread ends");
         }
+
     }
 
     private boolean updateTask(InstanceDO inst){
@@ -43,15 +49,14 @@ public class ReadyExecuter {
             List<InstanceDO> list = this.instDAO.getRelaInstanceList(inst.getInstanceId());
             for(InstanceDO preInst: list){
                 if(preInst.getStatus() == null){
-                    logger.info(inst.getInstanceId()+ "("+inst.getTaskName() + ") job is not ready,pre job "
+                    logger.info(inst.getInstanceId()+ "("+inst.getTaskName() + ") not ready,pre job "
                             + preInst.getInstanceId() + "(" + preInst.getTaskName() + ")" + " does not have initialization ");
                     return false;
-                }else if(preInst.getStatus() != Const.JOB_STATUS.JOB_SUCCESS.getValue()){
+                }else if(preInst.getStatus().intValue() == Const.JOB_STATUS.JOB_SUCCESS.getValue().intValue()){
+                    continue;
+                }else {
                     logger.info(inst.getInstanceId()+"(" + inst.getTaskName() + ") job is not ready,pre job "
                             + preInst.getInstanceId() + "(" + preInst.getTaskName() + ") status is "+preInst.getStatus() );
-                    return false;
-                }else{
-                    logger.error(inst.getInstanceId()+"(" + inst.getTaskName() + ") unknow error");
                     return false;
                 }
             }

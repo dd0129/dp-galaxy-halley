@@ -8,102 +8,70 @@ import com.dianping.data.warehouse.domain.InstanceDO;
 import com.dianping.data.warehouse.external.ExternalExecuter;
 import com.dianping.data.warehouse.external.ExternalExecuterImpl;
 import com.dianping.data.warehouse.halley.client.Const;
-import com.dianping.data.warehouse.resource.ResourceManager;
-import com.dianping.data.warehouse.resource.RunningQueueManager;
+import com.dianping.data.warehouse.resource.ResourceManager2;
 import com.dianping.data.warehouse.utils.ProcessUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Scope;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * Created by adima on 14-4-9.
  */
-@Component
-@Scope("prototype")
-public class Task implements Runnable{
-    private static Logger logger = LoggerFactory.getLogger(Task.class);
 
-    public void clone(Task task){
-        this.instDAO = task.getInstDAO();
-        this.extDAO = task.getExtDAO();
-    }
+public class Task2 implements Runnable{
+    private Logger logger = LoggerFactory.getLogger(Task2.class);
 
-    public InstanceDAO getInstDAO() {
-        return instDAO;
-    }
-
-    public void setInstDAO(InstanceDAO instDAO) {
-        this.instDAO = instDAO;
-    }
-
-    public ExternalDAO getExtDAO() {
-        return extDAO;
-    }
-
-    public void setExtDAO(ExternalDAO extDAO) {
-        this.extDAO = extDAO;
-    }
-
-    @Resource(name="instanceDAO")
     private InstanceDAO instDAO;
-
-    @Resource(name="externalDAO")
     private ExternalDAO extDAO;
-
     private InstanceDO inst;
 
-    public void setInstanceDO(InstanceDO inst){
+    public Task2(InstanceDAO instDAO, ExternalDAO extDAO, InstanceDO inst){
+        this.instDAO = instDAO;
+        this.extDAO = extDAO;
         this.inst = inst;
     }
 
+    @Override
+    public String toString(){
+        return "Task"+this.inst.getInstanceId();
+    }
+    @Override
     public void run() {
+        logger.info(inst.getInstanceId()+"("+inst.getTaskName()+") execute thread starts");
         boolean flag = false;
         try {
-            logger.info("the task"+inst.getInstanceId()+" executer thread starts");
-            if (inst == null) {
+            int size = ResourceManager2.inQueue(inst);
+            flag = size!=-1;
+            if(!flag){
                 return;
-            } else {
-                flag = ResourceManager.allocate(inst.getDatabaseSrc());
-                if(!flag){
-                    return;
-                }
-                RunningQueueManager.inQueue(inst);
-                logger.info("Running Queue already run " + RunningQueueManager.size() + " tasks");
-                logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + " join to Running Queue");
-
-                Integer rtn = this.executeTask();
-                if(containCode(rtn,inst.getSuccessCode()) && inst.getIsExternalPost() == 1){
-                    ExternalDO extDO = this.extDAO.getExternalTasksById(inst.getTaskId());
-
-                    ExternalExecuter ext = new ExternalExecuterImpl();
-                    this.recoredExternalLog(inst,ext.execute(inst,extDO));
-                }else{
-                    this.recoredInternalLog(inst,rtn);
-                }
-                //
-                //this.sendEmail(ts);
             }
+            logger.info(inst.getDatabaseSrc() +" " +size);
+
+            inst.setInQueueTimeMillis(System.currentTimeMillis());
+            logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") join to Running Queue");
+
+            Integer rtn = this.executeTask();
+            if(containCode(rtn,inst.getSuccessCode()) && inst.getIsExternalPost() == 1){
+                ExternalDO extDO = this.extDAO.getExternalTasksById(inst.getTaskId());
+
+                ExternalExecuter ext = new ExternalExecuterImpl();
+                this.recoredExternalLog(inst,ext.execute(inst,extDO));
+            }else{
+                this.recoredInternalLog(inst,rtn);
+            }
+            //
+            //this.sendEmail(ts);
+
         } catch (Exception e) {
-            logger.error("task executer thread error", e);
+            logger.error(inst.getInstanceId()+"("+inst.getTaskName()+") execute thread error", e);
         } finally {
-            if(inst != null){
-                RunningQueueManager.outQueue(inst);
-                if(flag){
-                    ResourceManager.release(inst.getDatabaseSrc());
-                }
+            if(flag){
+                ResourceManager2.outQueue(inst);
             }
-            logger.info("the task"+inst.getInstanceId()+" executer thread ends");
+            logger.info(inst.getInstanceId()+"("+inst.getTaskName()+") execute thread ends");
         }
     }
 
@@ -153,6 +121,10 @@ public class Task implements Runnable{
                             Const.JOB_STATUS.JOB_WAIT.getDesc(),currTime);
                     return;
                 }
+            }
+            if(CoreConst.INTERNAL_EXECUTE_ERROR == rtn.intValue()){
+                this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_INTERNAL_ERROR.getValue(),
+                        Const.JOB_STATUS.JOB_INTERNAL_ERROR.getDesc(),currTime);
             }
             logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") retcode "+rtn+" is fail");
             this.instDAO.updateInstEndStatus(inst.getInstanceId(), Const.JOB_STATUS.JOB_FAIL.getValue(),

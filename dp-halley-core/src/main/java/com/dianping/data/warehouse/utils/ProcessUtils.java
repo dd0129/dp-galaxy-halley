@@ -87,7 +87,7 @@ public class ProcessUtils {
             errPrinter.start();
             return process.waitFor();
         }catch(Exception e){
-            logger.error(inst.getTaskId()+"("+inst.getTaskName()+") execute wormhole command error",e);
+            logger.error(inst.getTaskId()+"("+inst.getTaskName()+") execute command error",e);
             return CoreConst.INTERNAL_EXECUTE_ERROR;
         }
     }

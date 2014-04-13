@@ -1,6 +1,8 @@
 package com.dianping.data.warehouse.executer;
 
 import com.dianping.data.warehouse.common.MockData;
+import com.dianping.data.warehouse.dao.ExternalDAO;
+import com.dianping.data.warehouse.dao.InstanceDAO;
 import com.dianping.data.warehouse.domain.InstanceDO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +17,11 @@ import javax.annotation.Resource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:test-spring-applicationcontext.xml")
 public class TaskTest {
-    @Resource(name="task")
-    private Task task;
+    @Resource(name="instanceDAO")
+    private InstanceDAO instDAO;
+
+    @Resource(name="externalDAO")
+    private ExternalDAO extDAO;
 
     @Test
     public void testRun() throws Exception {
@@ -24,7 +29,7 @@ public class TaskTest {
         inst.setInstanceId("1000120120514");
         inst.setIsExternalPost(0);
         inst.setLogPath("e:\\data\\test.log");
-        task.setInstanceDO(inst);
+        Task2 task = new Task2(instDAO,extDAO,inst);
         task.run();
     }
 }

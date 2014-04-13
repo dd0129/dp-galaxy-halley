@@ -46,13 +46,14 @@
         <result property="recallInterval"   column="recall_interval"      />
         <result property="recallLimit"      column="recall_limit"         />
         <result property="successCode"      column="success_code"         />
+        <result property="isExternalPost"      column="is_external_post"         />
     </resultMap>
 
     <select id="getValidateTaskList" resultMap="task" parameterType="Integer" >
 		select
         task_id,task_name,table_name,remark,database_src,task_obj,para1,para2,para3,log_home,log_file,task_group_id,
         cycle,prio_lvl,if_recall,if_wait,if_pre,if_val,add_user,add_time,update_user,update_time,type,offset,offset_type,
-        freq,owner,wait_code,recall_code,timeout,recall_interval,recall_limit,success_code
+        freq,owner,wait_code,recall_code,timeout,recall_interval,recall_limit,success_code,is_external_post
         from etl_task_cfg where if_val = #{status}
 	</select>
 	

@@ -40,10 +40,10 @@ public class ExternalExecuterImpl implements ExternalExecuter{
             String message = (String)rtnJson.get("message");
             this.writeLogFile(inst, message);
             return code;
-        }catch(Exception e){
-            logger.error("external call error",e);
+        }catch(Throwable e){
+            logger.error(inst.getInstanceId()+"("+inst.getTaskName()+") external call error",e);
             //return Const.JOB_STATUS.JOB_SUCCESS.getValue();
-            throw new RuntimeException("external call error",e);
+            throw new RuntimeException(inst.getInstanceId()+"("+inst.getTaskName()+") external call error",e);
         }
     }
 

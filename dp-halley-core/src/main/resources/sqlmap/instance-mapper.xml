@@ -49,6 +49,7 @@
         <result property="jobCode"         column="job_code"        />
         <result property="runningPrio"     column="running_prio"    />
         <result property="timeout"          column="timeout"         />
+        <result property="isExternalPost"   column="is_external_post"         />
     </resultMap>
 	
 	<insert id="saveInstance" parameterType="instance">
@@ -60,7 +61,7 @@
         recall_interval,recall_limit,start_time,end_time,
         time_stamp,type,table_name,cal_dt,freq,
         owner,trigger_time,wait_code,recall_code,success_code,job_code,
-        running_prio,timeout)
+        running_prio,timeout,is_external_post)
         values(
         #{instanceId},#{taskId},#{taskName},#{taskGroupId},#{databaseSrc},
         #{taskObj},#{para1},#{para2},#{para3},#{logPath},
@@ -69,7 +70,7 @@
         #{recallInterval},#{recallLimit},#{startTime},#{endTime},#{timestamp},
         #{type},#{tableName},#{calDt},#{freq},#{owner},
         #{triggerTime},#{waitCode},#{recallCode},#{successCode},#{jobCode},
-        #{runningPrio},#{timeout})
+        #{runningPrio},#{timeout},#{isExternalPost})
 	</insert>
 	
 	<update id="saveInstanceRela" parameterType="java.util.List">
@@ -77,8 +78,8 @@
             (task_status_id,task_id,pre_sts_id,pre_id,time_stamp)
         values
         <foreach item="item" index="index" collection="list"
-                 open="(" separator="," close=")">
-            #{item.instanceId},#{item.taskId},#{item.preInstanceId},#{item.preId},#{item.timestamp}
+                  separator="," >
+            (#{item.instanceId},#{item.taskId},#{item.preInstanceId},#{item.preId},#{item.timestamp})
         </foreach>
 	</update>
 

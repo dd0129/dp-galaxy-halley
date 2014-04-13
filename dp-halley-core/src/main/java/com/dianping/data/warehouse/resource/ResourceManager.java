@@ -33,7 +33,7 @@ public class ResourceManager {
         }
     }
 
-    public static  boolean allocate(String resourceName){
+    public static boolean allocate(String resourceName){
         Resource res = RESOURCE_MAP.get(resourceName);
         synchronized (res){
             if(res == null){
@@ -43,7 +43,7 @@ public class ResourceManager {
             } else{
                 if(res.getRunningNum()<res.getCapability()){
                     res.addRunningNum();
-                    logger.info(resourceName.concat("allocate resource;equal " ).concat(String.valueOf(res.getRunningNum())));
+                    logger.info(resourceName.concat(" allocate resource; the running number equals " ).concat(String.valueOf(res.getRunningNum())));
                     return true;
                 }
                 logger.info(resourceName.concat(" resouce is full; limit :=" ).concat(String.valueOf(res.getCapability())));
@@ -53,14 +53,14 @@ public class ResourceManager {
 
     }
 
-    public synchronized static void release(String resourceName){
+    public static void release(String resourceName){
         Resource res = RESOURCE_MAP.get(resourceName);
         synchronized (res){
             if(res == null){
                 logger.info(resourceName.concat(" is not exists"));
             } else{
                 res.minusRunningNum();
-                logger.info(resourceName.concat(" release resouce ;number:= " ).concat(String.valueOf(res.getRunningNum())));
+                logger.info(resourceName.concat(" release resource ;the running number equals " ).concat(String.valueOf(res.getRunningNum())));
             }
         }
 

@@ -19,7 +19,7 @@ import java.util.List;
  * Created by adima on 14-3-23.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:spring-applicationcontext.xml")
+@ContextConfiguration("classpath:spring-applicationcontext-resource.xml")
 public class InstanceDAOTest {
 
     private static Logger logger = LoggerFactory.getLogger(InstanceDAOTest.class);

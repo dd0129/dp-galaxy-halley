@@ -19,5 +19,5 @@ public class HalleyConst {
      */
     public static final String DATABASE_TYPE_GP59 = "gp59";
 
-    public static final String HALLEY_CASCADE_TOPIC = "halley_cascade";
+
 }

@@ -8,7 +8,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class StartScheduler {
     public static void main(String[] args){
-        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring-applicationcontext.xml");
-        context.getBean("fuck");
+        ApplicationContext context = new ClassPathXmlApplicationContext("classpath:spring-applicationcontext-resource.xml");
+        ResetExecuter reset = (ResetExecuter)context.getBean("reset");
+        reset.execute();
+        new ClassPathXmlApplicationContext("classpath:spring-applicationcontext-resource.xml",
+                "classpath:spring-applicationcontext-bean.xml");
     }
 }

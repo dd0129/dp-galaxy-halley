@@ -87,12 +87,12 @@ public class TaskValidator {
             }
         }
         if(flag && ifRecall == CoreConst.TASK_IFRECALL.RECALL.getValue()){
-            flag = recallLimit <= 10;
+            flag = recallLimit <= 30;
         }
         String[] rtn = new String[2];
         rtn[0] = flag ? "1" : "0";
         if(!flag){
-            rtn[1] = "ifRecall "+ifRecall +" recallLimit "+recallLimit+" is illegal";
+            rtn[1] = "ifRecall "+ifRecall +" and recallLimit "+recallLimit+" is illegal";
         }
 
         return rtn;

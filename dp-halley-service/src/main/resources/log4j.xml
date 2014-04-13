@@ -5,17 +5,21 @@
 
     <!--输出到控制台,方便调试,应用时可以关闭 -->
     <appender name="ConsoleAppender" class="org.apache.log4j.ConsoleAppender">
-        <param name="Encoding" value="GBK"/>
+        <param name="Encoding" value="UTF8"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %-5p [%F:%L] - %m%n"/>
         </layout>
+        <!--<filter class="org.apache.log4j.varia.LevelRangeFilter">-->
+            <!--<param name="LevelMin" value="INFO"/>-->
+            <!--<param name="LevelMax" value="ERROR"/>-->
+        <!--</filter>-->
     </appender>
 
     <appender name="filelog" class="org.apache.log4j.DailyRollingFileAppender">
         <param name="File" value="/data/applogs/halley/info.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
-        <param name="Encoding" value="GBK"/>
+        <param name="Encoding" value="UTF8"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %-5p [%F:%L] - %m%n"/>
         </layout>
@@ -30,7 +34,7 @@
         <param name="file" value="/data/applogs/halley/debug.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
-        <param name="Encoding" value="GBK"/>
+        <param name="Encoding" value="UTF8"/>
 
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%m%n"/>
@@ -49,7 +53,7 @@
         <param name="file" value="/data/applogs/halley/error.log"/>
         <param name="DatePattern" value="'.'yyyy-MM-dd"/>
         <param name="Append" value="true"/>
-        <param name="Encoding" value="GBK"/>
+        <param name="Encoding" value="UTF8"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="%d %-5p [%F:%L] - %m%n"/>
         </layout>
@@ -125,6 +129,5 @@
         <appender-ref ref="output"/>
         <appender-ref ref="errorfile"/>
         <appender-ref ref="ConsoleAppender"/>
-        <!-- <appender-ref ref="filelog" /> -->
     </root>
 </log4j:configuration>

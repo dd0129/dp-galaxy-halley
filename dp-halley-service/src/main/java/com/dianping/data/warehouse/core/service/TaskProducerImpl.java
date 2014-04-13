@@ -1,7 +1,8 @@
 package com.dianping.data.warehouse.core.service;
 
 import com.dianping.data.warehouse.core.common.HalleyConst;
-import com.dianping.data.warehouse.halley.service.TaskProducer;
+import com.dianping.data.warehouse.halley.client.Const;
+import com.dianping.data.warehouse.halley.service.HalleyProducer;
 import com.dianping.swallow.common.message.Destination;
 import com.dianping.swallow.producer.Producer;
 import com.dianping.swallow.producer.ProducerConfig;
@@ -13,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @rundemo_name 生产者例子(同步，可输入)
  */
-public class TaskProducerImpl implements TaskProducer{
+public class TaskProducerImpl implements HalleyProducer {
     private static Logger logger = LoggerFactory.getLogger(TaskProducerImpl.class);
 
     @Override
@@ -21,11 +22,11 @@ public class TaskProducerImpl implements TaskProducer{
         try{
             ProducerConfig config = new ProducerConfig();
             config.setMode(ProducerMode.ASYNC_MODE);
-            Producer p = ProducerFactoryImpl.getInstance().createProducer(Destination.topic(HalleyConst.HALLEY_CASCADE_TOPIC), config);
+            Producer p = ProducerFactoryImpl.getInstance().createProducer(Destination.topic(Const.HALLEY_CASCADE_TOPIC), config);
             p.sendMessage(msg);
             return true;
         }catch(Exception e){
-            logger.error("pulish topic "+ HalleyConst.HALLEY_CASCADE_TOPIC,e);
+            logger.error("pulish topic "+ Const.HALLEY_CASCADE_TOPIC,e);
             return false;
         }
     }

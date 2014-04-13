@@ -176,6 +176,11 @@
             <artifactId>hawk-client</artifactId>
             <version>0.7.1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
     </dependencies>
 
     <profiles>
