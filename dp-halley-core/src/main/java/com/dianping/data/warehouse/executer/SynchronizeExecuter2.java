@@ -39,8 +39,6 @@ public class SynchronizeExecuter2 {
                     }
                 }catch(Exception e){
                     logger.error(inst.getInstanceId() + "(" + inst.getTaskName() + ") synchronize error",e);
-                }finally{
-                    logger.info(inst.getInstanceId() + "(" + inst.getTaskName() + ") release resource");
                 }
             }
         } finally {
